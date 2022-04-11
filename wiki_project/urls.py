@@ -14,17 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, register_converter
 
 from documents.views import (
     DocsListView, 
     DocsRevisionsView, 
     DocsLatestView,
+    DocsRevisionView,
 )
+from documents.common import DateConverter
+
+register_converter(DateConverter, 'date')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('documents/', DocsListView.as_view()),
     path('documents/<str:slug>/', DocsRevisionsView.as_view()),
     path('documents/<str:slug>/latest/', DocsLatestView.as_view()),
+    path('documents/<str:slug>/<date:revision>/', DocsRevisionView.as_view()),
 ]

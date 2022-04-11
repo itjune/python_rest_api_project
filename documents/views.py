@@ -5,7 +5,7 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
 )
-from django.forms import ValidationError
+from datetime import datetime
 
 from documents.models import Document
 from documents.serializers import (
@@ -14,6 +14,7 @@ from documents.serializers import (
     DocumentCreateSerializer,
     DocumentRevisionsSerializer,
 )
+from documents.common import DateConverter
 
 class DocsListView(ListCreateAPIView):
     queryset = Document.objects.all().values('slug').distinct()
@@ -42,6 +43,19 @@ class DocsLatestView(RetrieveAPIView):
         slug = self.kwargs.get('slug')
         try:
             doc = Document.objects.filter(slug=slug).latest('revision')
+        except Document.DoesNotExist:
+            raise Http404("No such document")
+        return doc
+
+class DocsRevisionView(RetrieveAPIView):
+    serializer_class = DocumentLatestSerializer
+    lookup_field = 'slug'
+
+    def get_object(self):
+        slug = self.kwargs.get('slug')
+        timestamp_ = self.kwargs.get('revision')
+        try:
+            doc = Document.objects.filter(slug=slug, revision__lte=timestamp_).latest('revision')
         except Document.DoesNotExist:
             raise Http404("No such document")
         return doc
