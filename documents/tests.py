@@ -72,3 +72,49 @@ class DocumentsListTestCase(APITestCase):
                 response.status_code,
                 400
             )
+
+class DocsRevisionsViewTestCase(APITestCase):
+    fixtures = ['test_data.json']
+
+    def test_list_revisions_view(self):
+        response = self.client.get('/documents/doc_3/')
+
+        self.assertEqual(
+            response.data,
+            [
+                {'revision': '2022-03-11 21:40'},
+                {'revision': '2022-04-11 21:40'},
+            ]
+        )
+
+    def test_list_revisions_view_err(self):
+        response = self.client.get('/documents/doc_300/')
+
+        self.assertEqual(
+                response.status_code,
+                404
+            )
+    
+
+class DocsLatestViewTestCase(APITestCase):
+    fixtures = ['test_data.json']
+
+    def test_list_revisions_view(self):
+        response = self.client.get('/documents/doc_3/latest/')
+
+        self.assertEqual(
+            response.data,
+            {
+                'slug': 'doc_3', 
+                'content': 'new text example for doc 3',
+                'revision': '2022-04-11 21:40',
+            } 
+        )
+
+    def test_list_revisions_view_err(self):
+        response = self.client.get('/documents/doc_300/latest/')
+
+        self.assertEqual(
+                response.status_code,
+                404
+            )

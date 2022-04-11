@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 from rest_framework.generics import (
     ListCreateAPIView, 
     ListAPIView,
@@ -29,6 +30,8 @@ class DocsRevisionsView(ListAPIView):
     def get_queryset(self):
         slug = self.kwargs.get('slug')
         docs = Document.objects.filter(slug=slug).all()
+        if not docs:
+            raise Http404("No such document")
         return docs
 
 class DocsLatestView(RetrieveAPIView):
@@ -37,5 +40,8 @@ class DocsLatestView(RetrieveAPIView):
 
     def get_object(self):
         slug = self.kwargs.get('slug')
-        doc = Document.objects.filter(slug=slug).latest('revision')
+        try:
+            doc = Document.objects.filter(slug=slug).latest('revision')
+        except Document.DoesNotExist:
+            raise Http404("No such document")
         return doc
