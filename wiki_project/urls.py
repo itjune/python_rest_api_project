@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from documents.views import DocsList
+from documents.views import DocsListView, DocsRevisionsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('documents/', DocsList.as_view()),
+    path('documents/', DocsListView.as_view()),
+    path('documents/<str:slug>', DocsRevisionsView.as_view()),
 ]

@@ -18,3 +18,10 @@ class DocumentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = ('slug', 'content')
+
+class DocumentRevisionsSerializer(serializers.ModelSerializer):
+    revision = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
+
+    class Meta:
+        model = Document
+        fields = ('revision', )
