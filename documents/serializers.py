@@ -1,8 +1,20 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from documents.models import Document
 
-class DocumentSerializer(serializers.ModelSerializer):
+class DocumentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Document
-        fields = ('slug', 'content', 'revision')
+        fields = ('slug', )
+
+    
+class DocumentCreateSerializer(serializers.ModelSerializer):
+    slug = serializers.SlugField(
+        max_length=50,
+        validators=[UniqueValidator(queryset=Document.objects.values_list('slug', flat=True).distinct())]
+    )
+
+    class Meta:
+        model = Document
+        fields = ('slug', 'content')
