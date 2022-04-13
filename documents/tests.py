@@ -123,7 +123,7 @@ class DocsRevisionViewTestCase(APITestCase):
     fixtures = ['test_data.json']
 
     def test_list_revisions_view(self):
-        response = self.client.get('/documents/doc_3/2022-04-01/')
+        response = self.client.get('/documents/doc_3/2022-04-01T21-00/')
 
         self.assertEqual(
             response.data,
@@ -134,7 +134,7 @@ class DocsRevisionViewTestCase(APITestCase):
             } 
         )
 
-        response = self.client.get('/documents/doc_3/2022-05-01/')
+        response = self.client.get('/documents/doc_3/2022-05-01T21-00/')
 
         self.assertEqual(
             response.data,
@@ -146,14 +146,14 @@ class DocsRevisionViewTestCase(APITestCase):
         )
 
     def test_list_revisions_view_err(self):
-        response = self.client.get('/documents/doc_300/2022-05-01/')
+        response = self.client.get('/documents/doc_300/2022-05-01T21-00/')
 
         self.assertEqual(
                 response.status_code,
                 404
             )
 
-        response = self.client.get('/documents/doc_300/2000-01-01/')
+        response = self.client.get('/documents/doc_300/2000-01-01T21-00/')
 
         self.assertEqual(
                 response.status_code,
