@@ -26,6 +26,15 @@ class DocumentRevisionsSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('revision', )
 
+
+class DocumentCreateRevisionSerializer(serializers.ModelSerializer):
+    slug = serializers.SlugField()
+
+    class Meta:
+        model = Document
+        fields = ('slug', 'content', 'revision')
+
+
 class DocumentLatestSerializer(serializers.ModelSerializer):
     revision = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
 

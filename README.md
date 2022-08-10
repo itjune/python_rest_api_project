@@ -1,4 +1,5 @@
 ## Wiki test project
+Test project to store and change small docs 
 
 Prepare env
 `pip install -r requirements.txt`
